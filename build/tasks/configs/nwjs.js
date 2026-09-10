@@ -1,10 +1,14 @@
 const platforms = require( "../common/platforms" );
 
+// srcDir globs are resolved relative to the "cwd" option below (see build/tasks/custom/nwjs.js),
+// not to the grunt process's own cwd, so that nw-builder's file copy logic - which resolves each
+// matched file's path directly against outDir without stripping any srcDir prefix - places files
+// at the root of the built package instead of nesting them under a "build/tmp/prod/" subdirectory.
 const srcDir = [
-	"<%= dir.tmp_prod %>/**"
+	"**"
 ];
-const ignoreBinWin32 = "!<%= dir.tmp_prod %>/bin/win32/**";
-const ignoreBinWin64 = "!<%= dir.tmp_prod %>/bin/win64/**";
+const ignoreBinWin32 = "!bin/win32/**";
+const ignoreBinWin64 = "!bin/win64/**";
 
 const winIco = "<%= dir.resources %>/icons/icon-16-32-48-256.ico";
 const macIcns = "<%= dir.resources %>/icons/icon-1024.icns";
@@ -12,6 +16,7 @@ const macIcns = "<%= dir.resources %>/icons/icon-1024.icns";
 
 module.exports = {
 	options: {
+		cwd     : "<%= dir.tmp_prod %>",
 		cacheDir: "<%= dir.cache %>",
 		flavor  : "normal",
 		zip     : false
